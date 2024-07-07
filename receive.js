@@ -53,7 +53,7 @@ app.post('/save-lua-code', async (req, res) => {
     const apiUrl = `https://api.github.com/repos/subhian922/receive/contents/${username}_code.txt`;
     
     const authHeader = {
-        Authorization: 'token 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',
+        Authorization: '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',
         'Content-Type': 'application/json',
     };
     
