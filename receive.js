@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors'); // Import CORS package
 const fs = require('fs');
+const fetch = require('node-fetch');
 const { v4: uuidv4 } = require('uuid'); // For generating unique filenames
 
 const app = express();
@@ -44,23 +45,72 @@ app.get('/get-items', (req, res) => {
 });
 
 // POST endpoint to save Lua code
-app.post('/save-lua-code', (req, res) => {
+app.post('/save-lua-code', async (req, res) => {
     const username = req.query.username;
     const code = req.body.code;
+    
+    // GitHub API URL
+    const apiUrl = `https://api.github.com/repos/subhian922/receive/contents/${username}_code.txt`;
+    
+    const authHeader = {
+        Authorization: 'token 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',
+        'Content-Type': 'application/json',
+    };
+    
+    const fileContent = Buffer.from(code).toString('base64');
+    
+    // Check if file exists, create if not, update if exists
+    try {
+        const existingFileRes = await fetch(apiUrl, {
+            headers: authHeader,
+        });
 
-    // Generate a unique filename for the Lua code
-    const filename = `${uuidv4()}.txt`;
+        if (existingFileRes.status === 200) {
+            // Update file
+            const existingFile = await existingFileRes.json();
+            const updateRes = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: authHeader,
+                body: JSON.stringify({
+                    message: `Updating ${username}'s Lua code`,
+                    content: fileContent,
+                    sha: existingFile.sha,
+                }),
+            });
 
-    // Logic to save Lua code (this example uses in-memory storage, replace with external storage logic)
-    fs.writeFile(filename, code, err => {
-        if (err) {
-            console.error('Error saving Lua code:', err);
-            res.status(500).json({ error: 'Failed to save Lua code.' });
+            if (updateRes.status === 200) {
+                console.log('Lua code updated successfully on GitHub.');
+                res.status(200).json({ message: 'Lua code saved successfully.' });
+            } else {
+                console.error('Failed to update Lua code on GitHub.');
+                res.status(500).json({ error: 'Failed to save Lua code.' });
+            }
+        } else if (existingFileRes.status === 404) {
+            // Create new file
+            const createRes = await fetch(apiUrl, {
+                method: 'PUT',
+                headers: authHeader,
+                body: JSON.stringify({
+                    message: `Creating ${username}'s Lua code`,
+                    content: fileContent,
+                }),
+            });
+
+            if (createRes.status === 201) {
+                console.log('Lua code saved successfully on GitHub.');
+                res.status(200).json({ message: 'Lua code saved successfully.' });
+            } else {
+                console.error('Failed to create Lua code on GitHub.');
+                res.status(500).json({ error: 'Failed to save Lua code.' });
+            }
         } else {
-            console.log('Lua code saved successfully.');
-            res.status(200).json({ message: 'Lua code saved successfully.', filename: filename });
+            console.error('Failed to check Lua code on GitHub.');
+            res.status(500).json({ error: 'Failed to save Lua code.' });
         }
-    });
+    } catch (error) {
+        console.error('Error saving Lua code to GitHub:', error);
+        res.status(500).json({ error: 'Failed to save Lua code.' });
+    }
 });
 
 // Start the server
