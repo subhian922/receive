@@ -3,8 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
-
 
 const app = express();
 const port = process.env.PORT || 3000; // Use the port provided by Vercel
@@ -33,33 +31,22 @@ app.get('/get-players', (req, res) => {
 });
 
 // POST endpoint to save Lua code as text file
-module.exports = async (req, res) => {
-    const { method, body, query } = req;
-    
-    if (method === 'POST' && req.url === '/save-lua-code') {
-        const { username } = query;
-        const { code } = body;
+app.post('/save-lua-code', (req, res) => {
+    const username = req.query.username;
+    const code = req.body.code;
+    const filePath = path.join(__dirname, ${username}_code.txt);
 
-        const apiUrl = `https://api.github.com/repos/subhian922/receive/contents/${username}_code.txt`;
-
-        const authHeader = {
-            Authorization: 'token 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',
-            'Content-Type': 'application/json',
-        };
-
-        const fileContent = Buffer.from(code).toString('base64');
-
-        try {
-            // Your GitHub API logic here
-            // Ensure to handle responses and errors appropriately
-        } catch (error) {
-            console.error('Error saving Lua code to GitHub:', error);
+    fs.writeFile(filePath, code, err => {
+        if (err) {
+            console.error('Error saving Lua code:', err);
             res.status(500).json({ error: 'Failed to save Lua code.' });
+        } else {
+            console.log('Lua code saved successfully.');
+            res.status(200).json({ message: 'Lua code saved successfully.' });
         }
-    } else {
-        res.status(404).json({ error: 'Route not found' });
-    }
-};
+    });
+});
+
 app.listen(port, () => {
     console.log(Server running on port ${port});
 });
