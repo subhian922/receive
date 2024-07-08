@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     function fetchPlayerData() {
-        fetch('https://receive-eta.vercel.app/get-players')
+        fetch('https://receive-dun.vercel.app/get-players')
             .then(response => response.json())
             .then(data => {
                 console.log('Player data received:', data);
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showPlayerDetails(player) {
         document.getElementById('playerName').textContent = `${player.username}'s Items`;
 
-        fetch(`https://receive-eta.vercel.app/get-items?username=${player.username}`)
+        fetch(`https://receive-dun.vercel.app/get-items?username=${player.username}`)
             .then(response => response.json())
             .then(items => {
                 const playerItems = document.getElementById('playerItems');
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const playerName = document.getElementById('playerName').textContent.split("'s")[0];
         const luaCode = document.getElementById('luaCode').value;
 
-        fetch(`https://receive-eta.vercel.app/save-lua-code?username=${playerName}`, {
+        fetch(`https://receive-dun.vercel.app/save-lua-code?username=${playerName}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
