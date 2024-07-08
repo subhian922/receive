@@ -38,16 +38,16 @@ app.get('/get-items', (req, res) => {
 app.post('/save-lua-code', async (req, res) => {
     const username = req.query.username;
     const code = req.body.code;
-    
+
     const apiUrl = `https://api.github.com/repos/subhian922/receive/contents/${username}_code.txt`;
     
     const authHeader = {
-        Authorization: `token ${process.env.GITHUB_TOKEN}`,
+        Authorization: 'token YOUR_GITHUB_TOKEN',
         'Content-Type': 'application/json',
     };
     
     const fileContent = Buffer.from(code).toString('base64');
-    
+
     try {
         const existingFileRes = await fetch(apiUrl, {
             headers: authHeader,
