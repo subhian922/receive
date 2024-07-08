@@ -26,12 +26,15 @@
             </nav>
         </header>
         <main>
-
             <div class="login-button-container">
                 <button id="loginButton" class="login-button">LOGIN NOW!</button>
             </div>
         </main>
     </div>
-    <script src="scripts.js"></script>
+    <script>
+        document.getElementById('loginButton').addEventListener('click', function() {
+            window.location.href = 'login.html';
+        });
+    </script>
 </body>
 </html>
