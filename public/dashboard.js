@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     function fetchPlayerData() {
-        fetch('https://receive-dun.vercel.app/get-players')
+        fetch('https://receive-dun.vercel.app/api/get-players')
             .then(response => response.json())
             .then(data => {
                 console.log('Player data received:', data);
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePlayerSlots(players) {
         const playerSlotsContainer = document.getElementById('playerSlots');
-        playerSlotsContainer.innerHTML = '';
+        playerSlotsContainer.innerHTML = ''; // Clear existing player slots
 
         players.forEach(player => {
             const playerSlot = document.createElement('div');
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showPlayerDetails(player) {
         document.getElementById('playerName').textContent = `${player.username}'s Items`;
 
-        fetch(`https://receive-dun.vercel.app/get-items?username=${player.username}`)
+        fetch(`https://receive-dun.vercel.app/api/get-items?username=${player.username}`)
             .then(response => response.json())
             .then(items => {
                 const playerItems = document.getElementById('playerItems');
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const playerName = document.getElementById('playerName').textContent.split("'s")[0];
         const luaCode = document.getElementById('luaCode').value;
 
-        fetch(`https://receive-dun.vercel.app/save-lua-code?username=${playerName}`, {
+        fetch(`https://receive-dun.vercel.app/api/save-lua-code?username=${playerName}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -83,7 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
+    // Fetch player data initially
     fetchPlayerData();
 
+    // Fetch player data every 5 seconds
     setInterval(fetchPlayerData, 5000);
 });
