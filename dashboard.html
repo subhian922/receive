@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.socket.io/4.3.1/socket.io.min.js"></script>
+</head>
+<body>
+    <video autoplay muted loop id="bgVideo">
+        <source src="hak.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="dashboard-container">
+        <h1>Player Dashboard</h1>
+        <h3> COMING SOON!!</h3>
+        <div id="playerSlots" class="player-slots">
+            <!-- Player slots will be dynamically added here -->
+        </div>
+        <div id="playerDetails" class="player-details">
+            <!-- Player details will be displayed here -->
+            <h2 id="playerName"></h2>
+            <p id="playerItems"></p>
+            <textarea id="luaCode" placeholder="Type Lua code here..."></textarea>
+            <button onclick="saveLuaCode()">Save Lua Code</button>
+        </div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>
