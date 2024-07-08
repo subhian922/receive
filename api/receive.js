@@ -16,7 +16,7 @@ const playerItems = {
 app.use(bodyParser.json());
 app.use(cors());
 
-app.post('/receive-data', (req, res) => {
+app.post('/api/receive-data', (req, res) => {
     const playerData = req.body;
     console.log('Received player data:', playerData);
 
@@ -25,24 +25,24 @@ app.post('/receive-data', (req, res) => {
     res.status(200).json({ message: 'Data received successfully' });
 });
 
-app.get('/get-players', (req, res) => {
+app.get('/api/get-players', (req, res) => {
     res.json(receivedData);
 });
 
-app.get('/get-items', (req, res) => {
+app.get('/api/get-items', (req, res) => {
     const username = req.query.username;
     const items = playerItems[username] || [];
     res.json(items);
 });
 
-app.post('/save-lua-code', async (req, res) => {
+app.post('/api/save-lua-code', async (req, res) => {
     const username = req.query.username;
     const code = req.body.code;
 
     const apiUrl = `https://api.github.com/repos/subhian922/receive/contents/${username}_code.txt`;
     
     const authHeader = {
-        Authorization: 'token YOUR_GITHUB_TOKEN',
+        Authorization: 'token YOUR_GITHUB_TOKEN',  // Replace YOUR_GITHUB_TOKEN with your actual GitHub token
         'Content-Type': 'application/json',
     };
     
